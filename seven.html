@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<style>
+    *{
+        padding:0;
+        margin:0;
+        list-style: none;
+    }
+    .date_box{
+        width:1230px;
+        height:auto;
+        padding:10px;
+        padding-top:0;
+        margin:100px auto;
+        border:1px solid #ddd;
+        overflow: hidden;
+    }
+    .date_box ul{
+        width:100%;
+        height:100%;
+    }
+    .date_box li{
+        float:left;
+        width:180px;
+        height:100%;
+        margin-top:10px;
+        line-height: 40px;
+        padding:10px;
+        box-sizing: border-box;
+        background:deepskyblue;
+        margin-right:30px;
+        font-size: 12px;
+        color:#fff;
+        cursor:pointer;
+        border-radius: 10px;
+
+    }
+    .date_box li:nth-child(6n){
+        margin-right:0;
+    }
+</style>
+<body>
+    <div class="date_box"><ul></ul></div>
+</body>
+</html>
+<script src="jquery-1.8.3.js"></script>
+<script>
+    var sevendate={
+        init:function(data){
+          var box=data.box;
+          var palceday=data.palceday;
+          var just=data.just;
+          var num=data.num;
+          var datanum=this.makedate(palceday,just,num);
+            this.makebox(box,datanum)
+        },
+        makebox:function(box,datanum){
+            var box=box;
+            var data=datanum;
+            str="";
+            for(var i=0;i<data.length;i++){
+                str+='<li>'+data[i].before+'<--->'+data[i].after+'</li>'
+            }
+            box.find('ul').append(str)
+        },
+        makedate:function(palceday,just,num){
+            var arr=[];
+            for(var i=0;just>0?i<just*palceday*(num+1):i>just*palceday*(num+1);i+=just*palceday){
+                arr.push(this.changdate(i))
+            }
+            var time=[];
+            var before=0;
+            var after=1;
+            for(var i=0;i<num;i++){
+                obj={};
+                obj.before=arr[before];
+                obj.after=arr[after];
+                time.push(obj);
+                before=after;
+                after++;
+            }
+            return time;
+        },
+        changdate:function (palceday) {
+            var nete=palceday;
+            var date1=new Date();
+            var day=date1.getDate();
+            date1.setDate(day+nete);
+            var year1=date1.getFullYear();
+            var mon1=date1.getMonth()+1;
+            var day1=date1.getDate();
+            var dates= year1+"-"+(mon1<10?('0'+mon1):mon1)+"-"+(day1<10?('0'+day1):day1);
+            return dates;
+        }
+    };
+    $(function(){
+
+        sevendate.init({
+            box:$('.date_box'),//展示盒子
+            palceday:7,//两个日期间隔天数
+            just:-1,//过去-1  未来1
+            num:17//需要展现的数量
+        })
+    })
+</script>
